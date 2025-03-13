@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { Image, StyleSheet, Text, TextInput, View } from "react-native";
 
 interface CustomInputProps {
+  title: string;
   label?: string;
   placeholder: string;
   value: string;
+  error: string;
   onTextChange: (text: string) => void;
 }
 
@@ -12,6 +14,8 @@ export default function ItemInput({
   placeholder,
   value,
   onTextChange,
+  title,
+  error,
 }: CustomInputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -22,7 +26,8 @@ export default function ItemInput({
   };
 
   return (
-    <View>
+    <View style={{ margin: 10 }}>
+      <Text style={{ marginBottom: 10 }}>{title}</Text>
       <TextInput
         placeholder={placeholder}
         value={value}
@@ -33,11 +38,18 @@ export default function ItemInput({
         ]}
         onFocus={() => setIsFocused(true)}
         onBlur={handleBlur}
-        onChangeText={() => {
-          setIsError(value.trim().length === 0);
-          onTextChange(value);
+        onChangeText={(text) => {
+          setIsError(text.trim().length === 0);
+          onTextChange(text);
         }}
       />
+      {isError && (
+        <Image
+          style={{ position: "absolute", top: 40, right: 10 }}
+          source={require("../assets/images/mark.png")}
+        />
+      )}
+      <Text style={{ color: "red" }}>{error}</Text>
     </View>
   );
 }
